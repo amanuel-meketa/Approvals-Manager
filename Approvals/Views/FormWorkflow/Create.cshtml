@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Create Form Workflow";
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary mb-4">Create New Form Workflow</h2>
+
+    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input name="title" id="title" type="text" class="form-control" required />
+            <div class="invalid-feedback">
+                Please enter a title.
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            <i class="bi bi-save"></i> Create
+        </button>
+        <a asp-action="Index" class="btn btn-outline-secondary ms-2">
+            <i class="bi bi-arrow-left"></i> Back to list
+        </a>
+    </form>
+</div>
+<script>
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>

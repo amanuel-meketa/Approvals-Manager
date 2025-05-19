@@ -1,0 +1,56 @@
+﻿@model List<Approvals.Models.FormWorkflow>
+
+@{
+    ViewData["Title"] = "Form Workflows";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary">Form Workflows</h2>
+
+    <div class="mb-3">
+        <a class="btn btn-success" asp-action="Create">
+            <i class="bi bi-plus-lg"></i> Create New Form
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+              
+
+                @foreach (var item in Model)
+                {
+                    string statusClass = item.Status switch
+                    {
+                        FormStatus.Approved => "bg-success",
+                        FormStatus.Pending => "bg-warning text-dark",
+                        FormStatus.Submitted => "bg-info",
+                        FormStatus.Declined => "bg-danger",
+                        _ => "bg-secondary"
+                    };
+
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>
+                            <span class="badge @statusClass">@item.Status</span>
+                        </td>
+                        <td>
+                            <a class="btn btn-outline-primary btn-sm" asp-action="Details" asp-route-id="@item.Id">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>

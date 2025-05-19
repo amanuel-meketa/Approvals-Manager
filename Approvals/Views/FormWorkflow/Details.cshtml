@@ -1,0 +1,67 @@
+﻿@model Approvals.Models.FormWorkflow
+@using Approvals.Models
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container mt-4">
+    <h2 class="text-primary">@Model.Title</h2>
+    <p>
+        Status:
+        <span class="badge
+            @(Model.Status switch
+            {
+                FormStatus.Approved => "bg-success",
+                FormStatus.Pending => "bg-warning text-dark",
+                FormStatus.Submitted => "bg-info",
+                FormStatus.Declined => "bg-danger",
+                _ => "bg-secondary"
+            })">
+            @Model.Status
+        </span>
+    </p>
+
+    <h3 class="mt-4">Workflow Steps</h3>
+    <ol class="list-group list-group-numbered">
+        @for (var i = 0; i < Model.Steps.Count; i++)
+        {
+            var step = Model.Steps[i];
+            var isCurrent = i == Model.CurrentStepIndex;
+            var listItemClass = isCurrent ? "list-group-item active" : "list-group-item";
+
+            <li class="@listItemClass">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>@step.Name</strong>
+                        <div class="text-muted small">Assigned to: @step.AssignedUserId</div>
+                        <span class="badge bg-light text-dark">@step.Status</span>
+                    </div>
+                    @if (isCurrent && Model.Status != FormStatus.Approved && Model.Status != FormStatus.Declined)
+                    {
+                        <div class="btn-group" role="group">
+                            <form asp-action="ApproveStep" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <button type="submit" class="btn btn-success btn-sm">
+                                    <i class="bi bi-check-lg"></i> Approve
+                                </button>
+                            </form>
+                            <form asp-action="DeclineStep" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-x-lg"></i> Decline
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </li>
+        }
+    </ol>
+
+    <div class="mt-4">
+        <a class="btn btn-outline-secondary" asp-action="Index">
+            <i class="bi bi-arrow-left"></i> Back to list
+        </a>
+    </div>
+</div>
